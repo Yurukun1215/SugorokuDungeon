@@ -1,5 +1,15 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+[Serializable]
+public class StageData
+{
+    public int cellValue;
+    public int[] cardIds;
+}
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +28,15 @@ public class GameManager : MonoBehaviour
     [Header("ゴール演出")]
     [SerializeField] private GameObject goalText;
 
+    // 一応獲得が無いマスのIDを0としているがそんなマス実装しない可能性もある
+    [Header("マス毎に獲得できるカードのID")]
+    [SerializeField] private int[] cardIds;
+
+    [Header("カード情報")]
+    [SerializeField] Card[] cardList;
+
+    [SerializeField] CardData cardData;
+
     private float CELL_DISTANCE = 3;        //マス同士の距離
     private float MOVE_SPEED = 20;          //マスを進むスピード
     private float JUMP_HEIGHT = 2;          //プレイヤーのジャンプの高さ
@@ -33,9 +52,22 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayerMoveCoroutine(dice));
     }
 
+    private void CardSet()
+    {
+        //for (int i = 0; i < items.Count + 2; i++)
+        //{
+        //    if (itemIcons.Count <= i)
+        //        itemIcons.Add(Instantiate(itemIcons[0], containtsParent));
+
+        //    itemIcons[lastIndex].sprite = items[i].pattern;
+        //    //itemIcons[lastIndex].color = items[i].color;
+        //    itemIcons[lastIndex].gameObject.name = i.ToString();
+        //}
+    }
+
     private int Dice()
     {
-        return Random.Range(1, 7);
+        return UnityEngine.Random.Range(1, 7);
     }
 
     private IEnumerator PlayerMoveCoroutine(int moveCell)
@@ -68,13 +100,33 @@ public class GameManager : MonoBehaviour
             cells.position = pos;
             Ppos.y = PLAYER_POSITION_Y;
             player.position = Ppos;
-
             moveDistance = 0;
             yield return new WaitForSeconds(0.5f);
         }
+        GetCard();
         if (goalFlug)
         {
             goalText.SetActive(true);
         }
+    }
+
+    private void GetCard()
+    {
+        if (cardIds[playerStayCell] == 0)
+            return;
+
+        foreach (Card card in cardList)
+        {
+            if (card.ID == cardIds[playerStayCell])
+            {
+                Debug.Log($"効果 = {card.effect}\n効果量 = {card.effectValue}\nコマンド = {card.command}");
+                cardData.HoldCardList.Add(card);
+            }
+        }
+    }
+
+    public void GoBattle()
+    {
+        SceneManager.LoadScene("BattleScene");
     }
 }
