@@ -2075,14 +2075,8 @@ MonoBehaviour:
   goalFlug: 0
   goalText: {fileID: 71939544}
   cardIds: 0000000001000000010000000100000001000000
-  cardDataList:
-  - name: CARD01
-    description: EnemyProtect-10
-    ID: 1
-    effect: EnemyProtect
-    effectValue: -10
-    command: EnemyProtectDown
-  holdCardList: []
+  cardList: []
+  cardData: {fileID: 11400000, guid: 249556e7345224845b45b1f30c0c39a6, type: 2}
 --- !u!4 &1432127175
 Transform:
   m_ObjectHideFlags: 0

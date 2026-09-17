@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,9 +31,7 @@ public class GameManager : MonoBehaviour
     [Header("マス毎に獲得できるカードのID")]
     [SerializeField] private int[] cardIds;
 
-    [Header("カード情報")]
-    [SerializeField] Card[] cardList;
-
+    [Header("CardData(ScriptableObject)")]
     [SerializeField] CardData cardData;
 
     private float CELL_DISTANCE = 3;        //マス同士の距離
@@ -103,25 +100,11 @@ public class GameManager : MonoBehaviour
             moveDistance = 0;
             yield return new WaitForSeconds(0.5f);
         }
-        GetCard();
+        Card card = cardData.GetCard(cardIds[playerStayCell]);
+        cardData.HoldCardList.Add(card);
         if (goalFlug)
         {
             goalText.SetActive(true);
-        }
-    }
-
-    private void GetCard()
-    {
-        if (cardIds[playerStayCell] == 0)
-            return;
-
-        foreach (Card card in cardList)
-        {
-            if (card.ID == cardIds[playerStayCell])
-            {
-                Debug.Log($"効果 = {card.effect}\n効果量 = {card.effectValue}\nコマンド = {card.command}");
-                cardData.HoldCardList.Add(card);
-            }
         }
     }
 

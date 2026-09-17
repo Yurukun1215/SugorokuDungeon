@@ -14,10 +14,32 @@ public class Card
     public string effect;
     public float effectValue;
     public string command;
+    public float commandLimit;
 }
 
 [CreateAssetMenu(fileName = "CardData", menuName = "Scriptable Objects/CardData")]
 public class CardData : ScriptableObject
 {
-    public List<Card> HoldCardList;
+    [SerializeField] private List<Card> allCardList;
+
+    [SerializeField] private List<Card> holdCardList;
+    public List<Card> AllCardList
+    {
+        get { return allCardList; }
+    }
+
+    public List<Card> HoldCardList
+    {
+        get { return holdCardList; }
+    }
+
+    public Card GetCard(int id)
+    {
+        foreach(Card card in allCardList)
+        {
+            if (card.ID == id)
+                return card;
+        }
+        return null;
+    }
 }
