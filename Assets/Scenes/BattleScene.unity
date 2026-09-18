@@ -2034,17 +2034,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BattleManager
   player:
     name: Player
-    hp: 100
-    maxHp: 100
-    attack: 5
-    protect: 50
+    hp: 900
+    maxHp: 900
+    attack: 260
+    defense: 240
+    isAlive: 1
     slider: {fileID: 491046874}
   enemy:
     name: Enemy
-    hp: 100
-    maxHp: 100
-    attack: 5
-    protect: 50
+    hp: 850
+    maxHp: 850
+    attack: 240
+    defense: 260
+    isAlive: 1
     slider: {fileID: 1091103278}
   commandLimitText: {fileID: 701152809}
   commandText: {fileID: 2006949455}

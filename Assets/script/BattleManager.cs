@@ -13,9 +13,19 @@ public class BattleUnit
     public float hp;
     public float maxHp;
     public float attack;
-    public float protect;
+    public float defense;
+    public bool isAlive;
 
     public Slider slider;
+
+    public void Damage(int value)
+    {
+        hp -= value;
+        slider.value = hp / maxHp;
+        Debug.Log($"{name}に{value}のダメージ");
+        if (hp <= 0)
+            isAlive = false;
+    }
 }
 
 public class BattleManager : MonoBehaviour
@@ -31,29 +41,88 @@ public class BattleManager : MonoBehaviour
     [Header("スクリプト参照インスタンス")]
     [SerializeField] private CardData cardData;
 
-    private bool isPlayerTurn;
-
+    private bool canSelectCard;
     private bool isSuccessCommand;
-
     private Card useCard;
+    private float defenseConstant = 250;
+    private bool endBattle = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(BattleLoopCoroutine());
+        StartCoroutine(BattleLoop());
+    }
+    IEnumerator BattleLoop()
+    {
+        while (!endBattle)
+        {
+            yield return StartCoroutine(BattleLoopCoroutine());
+        }
+            
     }
 
     private IEnumerator BattleLoopCoroutine()
     {
-        BattleLog("YourTurn");
-        //持っているカードを表示する
-        while (useCard == null)
+        BattleLog("あなたのターンです");
+        if (cardData.HoldCardList.Count != 0)
         {
-            yield return null;
+            canSelectCard = true;
+            while (useCard == null)
+            {
+                yield return null;
+            }
+            canSelectCard = false;
+            yield return CommandCoroutine(useCard.command, useCard.commandLimit);
+            if (isSuccessCommand)
+                ReflectEffect();
+            commandLimitText.text = null;
+            commandText.text = null;
+            useCard = null;
         }
-        yield return CommandCoroutine(useCard.command, useCard.commandLimit);
-        Debug.Log("Success");
+        BattleLog("あなたの攻撃");
+        enemy.Damage(CalculateDamage(player, enemy));
+        if (!enemy.isAlive)
+        {
+            EndBattle(true);
+            yield break;
+        }
+        BattleLog("敵の攻撃");
+        player.Damage(CalculateDamage(enemy, player)); 
+        if (!player.isAlive)
+        {
+            EndBattle(false);
+            yield break;
+        }
+        yield return new WaitForSeconds(2.0f);
     }
 
+    private void EndBattle(bool win)
+    {
+        endBattle = true;
+        if (win)
+            Debug.Log("<color=red>あなたの勝ち");
+        else
+            Debug.Log("<color=red>あなたの負け");
+    }
+
+    private int CalculateDamage(BattleUnit attacker, BattleUnit defender)
+    {
+        float damage = attacker.attack * (defenseConstant / (defenseConstant + defender.defense));
+        return (int)damage;
+    }
+
+    private void ReflectEffect()
+    {
+        switch (useCard.effect)
+        {
+            case Effect.Attack:
+                player.attack += useCard.effectValue;
+                break;
+            case Effect.Defense:
+                enemy.defense += useCard.effectValue;
+                break;
+        }
+    }
 
     private IEnumerator CommandCoroutine(string command, float limit)
     {
@@ -70,11 +139,11 @@ public class BattleManager : MonoBehaviour
             //コマンドを受け付ける処理
             if (key.wasPressedThisFrame)
             {
-                if (keyIndex != maxKeyIndex)
+                TextPartMarkup(commandText, command, keyIndex, Color.red);
+                keyIndex++;
+                if (keyIndex < maxKeyIndex)
                 {
                     key = GetKeyControlFromChar(command[keyIndex]);
-                    TextPartMarkup(commandText, command, keyIndex, Color.red);
-                    keyIndex++;
                 }
                 else
                 {
@@ -124,6 +193,10 @@ public class BattleManager : MonoBehaviour
 
     public void SelectCard(int id)
     {
-        useCard = cardData.GetCard(id);
+        if (canSelectCard)
+        {
+            useCard = cardData.GetCard(id);
+            cardData.RemoveCard(id);
+        }
     }
 }

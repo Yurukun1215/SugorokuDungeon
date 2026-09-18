@@ -16,8 +16,36 @@ MonoBehaviour:
   - name: CARD01
     description: EnemyProtect-10
     ID: 1
-    effect: EnemyProtect
+    effect: 1
     effectValue: -10
     command: EnemyProtectDown
-    commandLimit: 10
-  holdCardList: []
+    commandLimit: 100
+  holdCardList:
+  - name: CARD01
+    description: EnemyProtect-10
+    ID: 1
+    effect: 1
+    effectValue: -10
+    command: EnemyProtectDown
+    commandLimit: 100
+  - name: CARD01
+    description: EnemyProtect-10
+    ID: 1
+    effect: 1
+    effectValue: -10
+    command: EnemyProtectDown
+    commandLimit: 100
+  - name: CARD01
+    description: EnemyProtect-10
+    ID: 1
+    effect: 1
+    effectValue: -10
+    command: EnemyProtectDown
+    commandLimit: 100
+  - name: CARD01
+    description: EnemyProtect-10
+    ID: 1
+    effect: 1
+    effectValue: -10
+    command: EnemyProtectDown
+    commandLimit: 100

@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
+public enum Effect
+{
+    Attack,
+    Defense
+}
+
+[Serializable]
 public class Card
 {
     //表示するだけのプロパティ
@@ -11,7 +18,7 @@ public class Card
 
     //内部的なプロパティ
     public int ID;
-    public string effect;
+    public Effect effect;
     public float effectValue;
     public string command;
     public float commandLimit;
@@ -41,5 +48,17 @@ public class CardData : ScriptableObject
                 return card;
         }
         return null;
+    }
+
+    public void RemoveCard(int id)
+    {
+        foreach (Card card in holdCardList)
+        {
+            if (card.ID == id)
+            {
+                holdCardList.Remove(card);
+                return;
+            }
+        }
     }
 }
