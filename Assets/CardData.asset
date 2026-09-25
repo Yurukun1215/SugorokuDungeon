@@ -28,24 +28,4 @@ MonoBehaviour:
     effectValue: -10
     command: EnemyProtectDown
     commandLimit: 100
-  - name: CARD01
-    description: EnemyProtect-10
-    ID: 1
-    effect: 1
-    effectValue: -10
-    command: EnemyProtectDown
-    commandLimit: 100
-  - name: CARD01
-    description: EnemyProtect-10
-    ID: 1
-    effect: 1
-    effectValue: -10
-    command: EnemyProtectDown
-    commandLimit: 100
-  - name: CARD01
-    description: EnemyProtect-10
-    ID: 1
-    effect: 1
-    effectValue: -10
-    command: EnemyProtectDown
-    commandLimit: 100
+  editCardId: 0

@@ -100,8 +100,7 @@ public class GameManager : MonoBehaviour
             moveDistance = 0;
             yield return new WaitForSeconds(0.5f);
         }
-        Card card = cardData.GetCard(cardIds[playerStayCell]);
-        cardData.HoldCardList.Add(card);
+        cardData.AddCard(cardIds[playerStayCell]);
         if (goalFlug)
         {
             goalText.SetActive(true);

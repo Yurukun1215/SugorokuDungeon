@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [Serializable]
@@ -30,6 +31,8 @@ public class CardData : ScriptableObject
     [SerializeField] private List<Card> allCardList;
 
     [SerializeField] private List<Card> holdCardList;
+
+    public int editCardId;
     public List<Card> AllCardList
     {
         get { return allCardList; }
@@ -50,6 +53,18 @@ public class CardData : ScriptableObject
         return null;
     }
 
+    public void AddCard(int id)
+    {
+        foreach (Card card in allCardList)
+        {
+            if (card.ID == id)
+            {
+                holdCardList.Add(card);
+                return;
+            }
+        }
+    }
+
     public void RemoveCard(int id)
     {
         foreach (Card card in holdCardList)
@@ -59,6 +74,30 @@ public class CardData : ScriptableObject
                 holdCardList.Remove(card);
                 return;
             }
+        }
+    }
+}
+
+[CustomEditor(typeof(CardData))]
+[CanEditMultipleObjects]
+public class CardDataEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.OnInspectorGUI();
+
+        if (GUILayout.Button("カードを追加"))
+        {
+            CardData cardData = (CardData)target;
+            cardData.AddCard(cardData.editCardId);
+            cardData.editCardId = 0;
+        }
+
+        if (GUILayout.Button("カードを削除"))
+        {
+            CardData cardData = (CardData)target;
+            cardData.RemoveCard(cardData.editCardId);
+            cardData.editCardId = 0;
         }
     }
 }
