@@ -28,11 +28,15 @@ public class Card
 [CreateAssetMenu(fileName = "CardData", menuName = "Scriptable Objects/CardData")]
 public class CardData : ScriptableObject
 {
+    [Header("CardList")]
     [SerializeField] private List<Card> allCardList;
 
     [SerializeField] private List<Card> holdCardList;
 
+    [Header("CardEditor")]
     public int editCardId;
+    public int editCardValue = 1;
+
     public List<Card> AllCardList
     {
         get { return allCardList; }
@@ -89,14 +93,22 @@ public class CardDataEditor : Editor
         if (GUILayout.Button("カードを追加"))
         {
             CardData cardData = (CardData)target;
-            cardData.AddCard(cardData.editCardId);
+
+            for (int i = 0; i < cardData.editCardValue; i++)
+                cardData.AddCard(cardData.editCardId);
+
+            cardData.editCardValue = 1;
             cardData.editCardId = 0;
         }
 
         if (GUILayout.Button("カードを削除"))
         {
             CardData cardData = (CardData)target;
-            cardData.RemoveCard(cardData.editCardId);
+
+            for (int i = 0; i < cardData.editCardValue; i++)
+                cardData.RemoveCard(cardData.editCardId);
+
+            cardData.editCardValue = 1;
             cardData.editCardId = 0;
         }
     }

@@ -53,6 +53,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI logText;
     [SerializeField] private GameObject damageEffect;
 
+    [SerializeField] private Slider enemyHpSlider;
+
     [Header("インベントリ関連")]
     [SerializeField] private GameObject inventoryBack;
     [SerializeField] private Transform inventoryParent;
@@ -61,6 +63,8 @@ public class BattleManager : MonoBehaviour
 
     [Header("スクリプト参照インスタンス")]
     [SerializeField] private CardData cardData;
+    [SerializeField] private StageData stageData;
+
 
     //カードを選択できる状態か
     private bool canSelectCard;
@@ -77,6 +81,8 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
+        enemy = stageData.Enemy;
+        enemy.slider = enemyHpSlider;
         player.SetupHPSlider();
         enemy.SetupHPSlider();
         StartCoroutine(BattleLoopCoroutine());
@@ -320,11 +326,6 @@ public class BattleManager : MonoBehaviour
 
     public void OpenInventory()
     {
-        foreach (GameObject obj in inventoryElements)
-        {
-            Destroy(obj);
-        }
-        inventoryElements.Clear();
         foreach (Card card in cardData.HoldCardList)
         {
             GameObject obj = Instantiate(inventoryElementPrefab, inventoryParent);
@@ -344,6 +345,11 @@ public class BattleManager : MonoBehaviour
 
     public void CloseInventory()
     {
+        foreach (GameObject obj in inventoryElements)
+        {
+            Destroy(obj);
+        }
+        inventoryElements.Clear();
         inventoryBack.SetActive(false);
     }
 

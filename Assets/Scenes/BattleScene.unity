@@ -956,10 +956,10 @@ RectTransform:
   - {fileID: 903591655}
   - {fileID: 701152811}
   - {fileID: 2006949454}
+  - {fileID: 535063317}
   - {fileID: 290237430}
   - {fileID: 789539500}
   - {fileID: 1663248287}
-  - {fileID: 535063317}
   - {fileID: 417098956}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2962,11 +2962,11 @@ MonoBehaviour:
     isAlive: 1
     slider: {fileID: 491046874}
   enemy:
-    name: Enemy
-    hp: 850
-    maxHp: 850
-    attack: 240
-    defense: 260
+    name: teki
+    hp: 0
+    maxHp: 0
+    attack: 0
+    defense: 0
     isAlive: 1
     slider: {fileID: 1091103278}
   playerObject: {fileID: 353816523}
@@ -2975,11 +2975,13 @@ MonoBehaviour:
   commandText: {fileID: 2006949455}
   logText: {fileID: 535063319}
   damageEffect: {fileID: 417098955}
+  enemyHpSlider: {fileID: 1091103278}
   inventoryBack: {fileID: 1663248286}
   inventoryParent: {fileID: 801422660}
   inventoryElementPrefab: {fileID: 2685506714981187471, guid: b788bd81a45754b4dafd3e815ac9ee9d, type: 3}
   inventoryElements: []
   cardData: {fileID: 11400000, guid: 249556e7345224845b45b1f30c0c39a6, type: 2}
+  stageData: {fileID: 11400000, guid: 0521937dd9eebb64883942df3db7cb37, type: 2}
 --- !u!4 &1484836040
 Transform:
   m_ObjectHideFlags: 0
