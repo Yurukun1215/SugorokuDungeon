@@ -18,8 +18,8 @@ MonoBehaviour:
     ID: 1
     effect: 1
     effectValue: -10
-    command: EnemyProtectDown
-    commandLimit: 100
+    command: ProtectDown
+    commandLimit: 20
   holdCardList: []
   editCardId: 0
   editCardValue: 1

@@ -7,6 +7,11 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.UI;
 
+public enum AnimKey
+{
+
+}
+
 [Serializable]
 public class BattleUnit
 {
@@ -14,14 +19,36 @@ public class BattleUnit
     public float hp;
     public float maxHp;
     public float attack;
-    public float defense;
+    public float defence;
     public bool isAlive;
 
+    public Transform parent;
     public Slider slider;
+    public TextMeshProUGUI nameText;
 
-    public void SetupHPSlider() 
+    public Transform transform;
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
+
+    public WaitUntil endAttack;
+
+    public void Setup() 
     {
+        hp = maxHp;
         slider.maxValue = maxHp;
+        slider.value = hp;
+        isAlive = true;
+        nameText.text = name;
+        endAttack = new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
+    }
+
+    public void SetStatus(BattleUnit unit)
+    {
+        name = unit.name;
+        hp = unit.hp;
+        maxHp = unit.maxHp;
+        attack = unit.attack;
+        defence = unit.defence;
     }
 
     public void Damage(int value)
@@ -40,20 +67,11 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private BattleUnit player;
     [SerializeField] private BattleUnit enemy;
 
-    [Header("キャラクターオブジェクト")]
-    [SerializeField] private Transform playerObject;
-    [SerializeField] private Transform enemyObject;
-
-    //[SerializeField] private Animator playerAnimator;
-    //[SerializeField] private Animator enemyAnimator;
-
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI commandLimitText;
     [SerializeField] private TextMeshProUGUI commandText;
     [SerializeField] private TextMeshProUGUI logText;
     [SerializeField] private GameObject damageEffect;
-
-    [SerializeField] private Slider enemyHpSlider;
 
     [Header("インベントリ関連")]
     [SerializeField] private GameObject inventoryBack;
@@ -75,17 +93,22 @@ public class BattleManager : MonoBehaviour
     //勝者
     private BattleUnit winner;
 
-    private float ATTACK_RANGE = 3f;
+    private WaitUntil playerEndAttack;
+    private WaitUntil enemyEndAttack;
+
+    private float ATTACK_RANGE = 8.5f;
     private float ATTACK_SPEED = 10f;
     private float DAMAGE_EFFECT_SPEED = 50f;
 
     void Start()
     {
-        enemy = stageData.Enemy;
-        enemy.slider = enemyHpSlider;
-        player.SetupHPSlider();
-        enemy.SetupHPSlider();
+        enemy.SetStatus(stageData.Enemy);
+        player.Setup();
+        enemy.Setup();
         StartCoroutine(BattleLoopCoroutine());
+
+        playerEndAttack = new WaitUntil(() => !player.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
+        enemyEndAttack = new WaitUntil(() => !enemy.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
     }
 
     private IEnumerator BattleLoopCoroutine()
@@ -113,58 +136,112 @@ public class BattleManager : MonoBehaviour
     {
         yield return UseCardCoroutine();
 
-        yield return PlayerAttackCoroutine();
+        //yield return PlayerAttackCoroutine();
+        yield return AttackCoroutine(player, enemy, 1);
     }
 
     private IEnumerator EnemyTurn()
     {
-        yield return EnemyAttackCoroutine();
+        //yield return EnemyAttackCoroutine();
+        yield return AttackCoroutine(enemy, player, -1);
     }
 
     private IEnumerator PlayerAttackCoroutine()
     {
         yield return BattleLog($"{player.name}の攻撃");
-        Vector3 pos = playerObject.position;
+        Vector3 pos = player.transform.position;
         float start = pos.x;
         float end = pos.x + ATTACK_RANGE;
+        player.animator.Play("Run");
         while (pos.x < end)
         {
             pos.x += Time.deltaTime * ATTACK_SPEED;
-            playerObject.position = pos;
+            player.transform.position = pos;
             yield return null;
         }
+        player.animator.Play("Attack");
         int damage = CalculateDamage(player, enemy);
         enemy.Damage(damage);
+        enemy.animator.Play("Hurt");
         StartCoroutine(DamageEffect(220, 0, 30, damage));
+        yield return playerEndAttack;
+        
+        player.spriteRenderer.flipX = true;
+        player.animator.Play("Run");
+
         while (pos.x > start)
         {
             pos.x -= Time.deltaTime * ATTACK_SPEED;
-            playerObject.position = pos;
+            player.transform.position = pos;
             yield return null;
         }
+        player.animator.Play("Idle");
+        player.spriteRenderer.flipX = false;
     }
 
     private IEnumerator EnemyAttackCoroutine()
     {
         yield return BattleLog($"{enemy.name}の攻撃");
-        Vector3 pos = enemyObject.position;
+        Vector3 pos = enemy.transform.position;
         float start = pos.x;
         float end = pos.x - ATTACK_RANGE;
+        enemy.animator.Play("Walk");
         while (pos.x > end)
         {
             pos.x -= Time.deltaTime * ATTACK_SPEED;
-            enemyObject.position = pos;
+            enemy.transform.position = pos;
             yield return null;
         }
+        enemy.animator.Play("Attack");
         int damage = CalculateDamage(enemy, player);
         player.Damage(damage);
+        player.animator.Play("Hurt");
         StartCoroutine(DamageEffect(-220, 0, 30, damage));
         while (pos.x < start)
         {
+            if (enemy.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
+            {
+                yield return null;
+                continue;
+            }
             pos.x += Time.deltaTime * ATTACK_SPEED;
-            enemyObject.position = pos;
+            enemy.transform.position = pos;
             yield return null;
         }
+    }
+
+    private IEnumerator AttackCoroutine(BattleUnit atk, BattleUnit def, int direction)
+    {
+        yield return BattleLog($"{atk.name}の攻撃");
+        Vector3 pos = atk.transform.position;
+        float start = pos.x;
+        float end = pos.x + (ATTACK_RANGE * direction);
+        atk.animator.Play("Run");
+        while ((pos.x * direction) < (end * direction))
+        {
+            pos.x += Time.deltaTime * ATTACK_SPEED * direction;
+            atk.transform.position = pos;
+            yield return null;
+        }
+        atk.animator.Play("Attack");
+        int damage = CalculateDamage(atk, def);
+        def.Damage(damage);
+        def.animator.Play("Hurt");
+        float effectPosX = def.parent.localPosition.x - (50 * direction);
+        StartCoroutine(DamageEffect(effectPosX, 0, 30, damage));
+        yield return atk.endAttack;
+
+        atk.spriteRenderer.flipX = true;
+        atk.animator.Play("Run");
+
+        while ((pos.x * direction) > (start * direction))
+        {
+            pos.x -= Time.deltaTime * ATTACK_SPEED * direction;
+            atk.transform.position = pos;
+            yield return null;
+        }
+        atk.animator.Play("Idle");
+        atk.spriteRenderer.flipX = false;
     }
 
     private IEnumerator DamageEffect(float posX, float startY, float endY, int damage)
@@ -267,12 +344,15 @@ public class BattleManager : MonoBehaviour
     {
         if (!enemy.isAlive)
         {
-            winner = player;
+            winner = player; 
+            enemy.animator.Play("Death");
+            Debug.Log("enemyは死んだ");
             return true;
         }
         if (!player.isAlive)
         {
             winner = enemy;
+            player.animator.Play("Death");
             return true;
         }
         return false;
@@ -285,7 +365,7 @@ public class BattleManager : MonoBehaviour
 
     private int CalculateDamage(BattleUnit attacker, BattleUnit defender)
     {
-        float damage = attacker.attack * (defenseConstant / (defenseConstant + defender.defense));
+        float damage = attacker.attack * (defenseConstant / (defenseConstant + defender.defence));
         return (int)damage;
     }
 
@@ -297,7 +377,7 @@ public class BattleManager : MonoBehaviour
                 player.attack += useCard.effectValue;
                 break;
             case Effect.Defense:
-                enemy.defense += useCard.effectValue;
+                enemy.defence += useCard.effectValue;
                 break;
         }
     }

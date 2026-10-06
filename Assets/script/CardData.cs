@@ -111,5 +111,12 @@ public class CardDataEditor : Editor
             cardData.editCardValue = 1;
             cardData.editCardId = 0;
         }
+
+        if (GUILayout.Button("カードを全削除"))
+        {
+            CardData cardData = (CardData)target;
+
+            cardData.HoldCardList.Clear();
+        }
     }
 }
