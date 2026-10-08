@@ -1,28 +1,41 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public class Stage
+{
+    public bool isClear;
+    public string name;
+    public string explanation;
+
+    public int diceCount;//サイコロを振れる回数
+    public List<int> cardIds;//{index}マス目で獲得できるカードのID
+
+    public BattleUnit enemy;
+}
 
 [CreateAssetMenu(fileName = "StageData", menuName = "Scriptable Objects/StageData")]
 public class StageData : ScriptableObject
 {
-    [Header("SugorokuScene")]
-    [SerializeField] private int diceCount; //サイコロを振れる回数
-    [SerializeField] private List<int> cardIds; //[index]マス目で獲得できるカードのID
+    [Header("ステージリスト")]
+    [SerializeField] private List<Stage> stageList;
 
-    public int DiceCount
+    [Header("選択されたステージ")]
+    [SerializeField] private Stage selectStage;
+
+    public List<Stage> StageList
     {
-        get { return diceCount; }
+        get { return stageList; }
     }
 
-    public List<int> CardIds
+    public Stage SelectStage
     {
-        get { return cardIds; }
+        get { return selectStage; }
     }
 
-    [Header("BattleScene")]
-    [SerializeField] private BattleUnit enemy;
-
-    public BattleUnit Enemy
+    public void SetStage(int index)
     {
-        get { return enemy; }
+        selectStage = stageList[index];
     }
 }

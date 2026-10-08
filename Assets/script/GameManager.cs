@@ -79,9 +79,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         cardIds.Clear();
-        cardIds = stageData.CardIds;
+        cardIds = stageData.SelectStage.cardIds;
         goal = cardIds.Count - 1;
-        diceCount = stageData.DiceCount;
+        diceCount = stageData.SelectStage.diceCount;
         DiceCountSet();
         CellSet();
     }

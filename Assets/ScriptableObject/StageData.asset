@@ -12,18 +12,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38711494442296946a06b0018c4d0dab, type: 3}
   m_Name: StageData
   m_EditorClassIdentifier: Assembly-CSharp::StageData
-  diceCount: 4
-  cardIds: 0000000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-  enemy:
-    name: Enemy
-    hp: 850
-    maxHp: 850
-    attack: 240
-    defence: 260
-    isAlive: 1
-    parent: {fileID: 0}
-    slider: {fileID: 0}
-    nameText: {fileID: 0}
-    transform: {fileID: 0}
-    animator: {fileID: 0}
-    spriteRenderer: {fileID: 0}
+  stageList:
+  - isClear: 0
+    name: "\u521D\u5FC3\u306E\u8FF7\u5BAE"
+    explanation: "\u307E\u305A\u306F\u3053\u3053\u304B\u3089\u59CB\u3081\u3088\u3046"
+    diceCount: 4
+    cardIds: 0000000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+    enemy:
+      name: Enemy
+      hp: 850
+      maxHp: 850
+      attack: 240
+      defence: 260
+      isAlive: 1
+      parent: {fileID: 0}
+      slider: {fileID: 0}
+      nameText: {fileID: 0}
+      transform: {fileID: 0}
+      animator: {fileID: 0}
+      spriteRenderer: {fileID: 0}
+  selectStage:
+    isClear: 0
+    name: 
+    explanation: 
+    diceCount: 0
+    cardIds: 
+    enemy:
+      name: 
+      hp: 0
+      maxHp: 0
+      attack: 0
+      defence: 0
+      isAlive: 0
+      parent: {fileID: 0}
+      slider: {fileID: 0}
+      nameText: {fileID: 0}
+      transform: {fileID: 0}
+      animator: {fileID: 0}
+      spriteRenderer: {fileID: 0}

@@ -102,7 +102,7 @@ public class BattleManager : MonoBehaviour
 
     void Start()
     {
-        enemy.SetStatus(stageData.Enemy);
+        enemy.SetStatus(stageData.SelectStage.enemy);
         player.Setup();
         enemy.Setup();
         StartCoroutine(BattleLoopCoroutine());
@@ -229,7 +229,8 @@ public class BattleManager : MonoBehaviour
         def.animator.Play("Hurt");
         float effectPosX = def.parent.localPosition.x - (50 * direction);
         StartCoroutine(DamageEffect(effectPosX, 0, 30, damage));
-        yield return atk.endAttack;
+        //yield return atk.endAttack;
+        yield return new WaitUntil(() => !atk.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
 
         atk.spriteRenderer.flipX = true;
         atk.animator.Play("Run");
@@ -381,6 +382,7 @@ public class BattleManager : MonoBehaviour
                 break;
         }
     }
+
     private void TextPartMarkup(TextMeshProUGUI tmp, string text, int index, Color color)
     {
         string colorCode = ColorUtility.ToHtmlStringRGB(color);
