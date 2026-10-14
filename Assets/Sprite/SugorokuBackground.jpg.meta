@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b1683956240d70d45893daa1748d709e
+guid: 805896930f00c8244a68991f745d6ae9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2173242594724538120
-    second: SugorokuBackGround_0
+      213: -5383226979297565769
+    second: Gemini_Generated_Image_fkylxqfkylxqfkyl_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SugorokuBackGround_0
+      name: SugorokuBackground
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 2688
-        height: 1536
+        width: 1456
+        height: 720
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8f812badf5717d1e0800000000000000
-      internalID: -2173242594724538120
+      spriteID: 7b36ba9759fea45b0800000000000000
+      internalID: -5383226979297565769
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 109bd7977cce1bc4f8b74d84cb7b76f1
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      SugorokuBackGround_0: -2173242594724538120
+      SugorokuBackground: -5383226979297565769
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

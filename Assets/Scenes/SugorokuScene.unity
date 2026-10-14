@@ -732,6 +732,7 @@ RectTransform:
   - {fileID: 1620591488}
   - {fileID: 800034752}
   - {fileID: 71939545}
+  - {fileID: 1027194516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1625,6 +1626,81 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 873395256}
   m_CullTransparentMesh: 1
+--- !u!1 &1027194513
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1027194516}
+  - component: {fileID: 1027194515}
+  - component: {fileID: 1027194514}
+  m_Layer: 5
+  m_Name: FadePanel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1027194514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027194513}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1027194515
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027194513}
+  m_CullTransparentMesh: 1
+--- !u!224 &1027194516
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027194513}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 374526636}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1142310653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1824,12 +1900,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2173242594724538120, guid: b1683956240d70d45893daa1748d709e, type: 3}
+  m_Sprite: {fileID: -3888895637442870903, guid: 8bb3bfedb02903c4c9a951957b35b2de, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 26.886564, y: 15.36}
+  m_Size: {x: 14.56, y: 7.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -2073,6 +2149,8 @@ MonoBehaviour:
   mapElementPrefab: {fileID: 3532359719529290763, guid: a9fb085558f22e14994ed920c0df89a7, type: 3}
   mapElements: []
   playerStayColor: {r: 0.3726415, g: 0.5817611, b: 1, a: 1}
+  fadeColor: {r: 0, g: 0, b: 0, a: 1}
+  fadePanel: {fileID: 1027194514}
   cardIds: 0000000001000000010000000100000001000000
   animator: {fileID: 419603714}
   cardData: {fileID: 11400000, guid: 249556e7345224845b45b1f30c0c39a6, type: 2}
@@ -2427,12 +2505,12 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2173242594724538120, guid: b1683956240d70d45893daa1748d709e, type: 3}
+  m_Sprite: {fileID: -3888895637442870903, guid: 8bb3bfedb02903c4c9a951957b35b2de, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 26.886564, y: 15.36}
+  m_Size: {x: 14.56, y: 7.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -2446,7 +2524,7 @@ Transform:
   m_GameObject: {fileID: 1686168974}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 26.88, y: 0, z: 0}
+  m_LocalPosition: {x: 20.48, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2888,7 +2966,7 @@ MonoBehaviour:
   m_text: "\u30B5\u30A4\u30B3\u30ED\n\u6B8B\u308A : ?"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 599f7eb516dfb5841977893de248def1, type: 2}
-  m_sharedMaterial: {fileID: 6411840775845535637, guid: 599f7eb516dfb5841977893de248def1, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 897f5e37559b8b44590dc8947505666d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3044,7 +3122,7 @@ MonoBehaviour:
   m_text: "\u5168\u4F53\u30DE\u30C3\u30D7"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 599f7eb516dfb5841977893de248def1, type: 2}
-  m_sharedMaterial: {fileID: 6411840775845535637, guid: 599f7eb516dfb5841977893de248def1, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 897f5e37559b8b44590dc8947505666d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3180,8 +3258,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: OK
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 599f7eb516dfb5841977893de248def1, type: 2}
+  m_sharedMaterial: {fileID: 6411840775845535637, guid: 599f7eb516dfb5841977893de248def1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3283,8 +3361,8 @@ Transform:
   m_GameObject: {fileID: 2067341143}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 4.63, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalPosition: {x: 0, y: 3.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1185335229}

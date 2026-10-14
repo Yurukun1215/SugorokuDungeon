@@ -24,6 +24,11 @@ public class StageData : ScriptableObject
     [Header("選択されたステージ")]
     [SerializeField] private Stage selectStage;
 
+    [Header("プレイヤー設定")]
+    [SerializeField] private string playerName;
+    [SerializeField] private float bgmVolume;
+    [SerializeField] private float seVolume;
+
     public List<Stage> StageList
     {
         get { return stageList; }
@@ -32,6 +37,30 @@ public class StageData : ScriptableObject
     public Stage SelectStage
     {
         get { return selectStage; }
+    }
+
+    public string PlayerName
+    {
+        get { return playerName; }
+        set { playerName = value; }
+    }
+
+    public float BgmVolume
+    {
+        get { return bgmVolume; }
+        set { bgmVolume = value; }
+    }
+
+    public float SeVolume
+    {
+        get { return seVolume; }
+        set { seVolume = value; }
+    }
+
+    public void SetVolumeDefault()
+    {
+        bgmVolume = 0.8f;
+        seVolume = 0.8f;
     }
 
     public void SetStage(int index)

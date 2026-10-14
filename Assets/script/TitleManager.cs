@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 //public enum Scene
 //{
@@ -64,7 +63,7 @@ public class TitleManager : MonoBehaviour
             cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetSize, Time.deltaTime * zoomSpeed);
             cameraTransform.position = Vector3.Lerp(cameraTransform.position, target, Time.deltaTime * zoomSpeed);
             if (cam.orthographicSize <= 0.75f)
-                SceneManager.LoadScene("SelectScene");
+                SceneManagerEx.LoadScene("SelectScene");
         }
     }
 }

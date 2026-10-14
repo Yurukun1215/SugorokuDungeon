@@ -39,7 +39,7 @@ public class BattleUnit
         slider.value = hp;
         isAlive = true;
         nameText.text = name;
-        endAttack = new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
+        //endAttack = new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
     }
 
     public void SetStatus(BattleUnit unit)
@@ -79,10 +79,29 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private GameObject inventoryElementPrefab;
     [SerializeField] private List<GameObject> inventoryElements;
 
+    [Header("フェードパネル関連")]
+    [SerializeField] private Color fadeColor;
+
+    [SerializeField] private Image fadePanel;
+    private bool isFadePanel;
+    private Color fadePanelColor;
+    private int fadeDirection;
+    private float changeAlphaValue = 1f;
+
+    [Header("リザルトパネル")]
+    [SerializeField] RectTransform result;
+
     [Header("スクリプト参照インスタンス")]
     [SerializeField] private CardData cardData;
     [SerializeField] private StageData stageData;
 
+
+    private float masterTimer = 0;
+    private float clearTime = 0;
+
+    private int getSkillValue = 0;
+
+    private int bestDamage = 0;
 
     //カードを選択できる状態か
     private bool canSelectCard;
@@ -99,16 +118,55 @@ public class BattleManager : MonoBehaviour
     private float ATTACK_RANGE = 8.5f;
     private float ATTACK_SPEED = 10f;
     private float DAMAGE_EFFECT_SPEED = 50f;
+    private float RESULT_OPEN_SPEED = 1000f;
 
     void Start()
     {
+        getSkillValue = cardData.HoldCardList.Count;
+        player.name = stageData.PlayerName;
         enemy.SetStatus(stageData.SelectStage.enemy);
         player.Setup();
         enemy.Setup();
-        StartCoroutine(BattleLoopCoroutine());
 
-        playerEndAttack = new WaitUntil(() => !player.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
-        enemyEndAttack = new WaitUntil(() => !enemy.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
+
+        //playerEndAttack = new WaitUntil(() => !player.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
+        //enemyEndAttack = new WaitUntil(() => !enemy.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
+
+        OnFadePanel(fadeColor, -1);
+    }
+    void Update()
+    {
+        masterTimer += Time.deltaTime;
+        if (isFadePanel)
+        {
+            fadePanelColor.a += changeAlphaValue * Time.deltaTime * fadeDirection;
+            fadePanel.color = fadePanelColor;
+            if (fadeDirection < 0 && fadePanelColor.a <= 0)
+            {
+                isFadePanel = false;
+                fadePanelColor.a = 0;
+                fadePanel.color = fadePanelColor;
+                fadePanel.raycastTarget = false;
+                StartCoroutine(BattleLoopCoroutine());
+            }
+            else if (fadeDirection > 0 && fadePanelColor.a >= 1)
+            {
+                SceneManagerEx.LoadScene("SelectScene");
+            }
+        }
+    }
+
+    private void OnFadePanel(Color color, int direction)
+    {
+        fadePanelColor = color;
+        if (direction < 0)
+            fadePanelColor.a = 1f;
+        else if (direction > 0)
+            fadePanelColor.a = 0f;
+        fadePanel.color = fadePanelColor;
+        fadeDirection = direction;
+        fadePanel.raycastTarget = true;
+        isFadePanel = true;
     }
 
     private IEnumerator BattleLoopCoroutine()
@@ -129,7 +187,7 @@ public class BattleManager : MonoBehaviour
 
             yield return new WaitForSeconds(2.0f);
         }
-        EndBattle();
+        StartCoroutine(EndBattle());
     }
 
     private IEnumerator PlayerTurn()
@@ -230,7 +288,7 @@ public class BattleManager : MonoBehaviour
         float effectPosX = def.parent.localPosition.x - (50 * direction);
         StartCoroutine(DamageEffect(effectPosX, 0, 30, damage));
         //yield return atk.endAttack;
-        yield return new WaitUntil(() => !atk.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"));
+        yield return new WaitUntil(() => atk.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"));
 
         atk.spriteRenderer.flipX = true;
         atk.animator.Play("Run");
@@ -243,6 +301,12 @@ public class BattleManager : MonoBehaviour
         }
         atk.animator.Play("Idle");
         atk.spriteRenderer.flipX = false;
+
+        if (atk.name == player.name)
+        {
+            if (damage > bestDamage)
+                bestDamage = damage;
+        }
     }
 
     private IEnumerator DamageEffect(float posX, float startY, float endY, int damage)
@@ -336,8 +400,25 @@ public class BattleManager : MonoBehaviour
         logText.text = log;
         yield return new WaitForSeconds(duration);
         logText.text = null;
-        //Debug.Log(log);//今はDebug.Log("hoge")にしているが後から画面上に表示するようにする
     }
+
+    private IEnumerator EndBattle()
+    {
+        clearTime = masterTimer;
+        yield return new WaitUntil(() => Mouse.current.rightButton.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame);
+        Vector3 pos = result.anchoredPosition;
+        while (true) { 
+            pos.y -= RESULT_OPEN_SPEED * Time.deltaTime;
+            result.anchoredPosition = pos;
+            if (pos.y < 0)
+            {
+                pos.y = 0;
+                result.anchoredPosition = pos;
+            }
+            yield return null;
+        }
+    }
+
 
     //以下関数
 
@@ -357,11 +438,6 @@ public class BattleManager : MonoBehaviour
             return true;
         }
         return false;
-    }
-
-    private void EndBattle()
-    {
-        StartCoroutine(BattleLog($"<color=red>{winner.name}の勝ち", 10.0f));
     }
 
     private int CalculateDamage(BattleUnit attacker, BattleUnit defender)
@@ -445,5 +521,10 @@ public class BattleManager : MonoBehaviour
             Destroy(obj);
             CloseInventory();
         }
+    }
+
+    public void ReturnGuild()
+    {
+        OnFadePanel(fadeColor, 1);
     }
 }

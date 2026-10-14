@@ -50,3 +50,6 @@ MonoBehaviour:
       transform: {fileID: 0}
       animator: {fileID: 0}
       spriteRenderer: {fileID: 0}
+  playerName: "\u533F\u540DP"
+  bgmVolume: 0.8
+  seVolume: 0.8

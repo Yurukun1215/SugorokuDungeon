@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 //[Serializable]
@@ -49,6 +47,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<GameObject> mapElements;
     [SerializeField] private Color playerStayColor;
 
+    [Header("フェードパネル関連")]
+    [SerializeField] private Color fadeColor;
+
+    [SerializeField] private Image fadePanel;
+    private bool isFadePanel;
+    private Color fadePanelColor;
+    private int fadeDirection;
+    private float changeAlphaValue = 1f;
+
     // 一応獲得が無いマスのIDを0としているがそんなマス実装しない可能性もある
     [Header("マス毎に獲得できるカードのID")]
     [SerializeField] private List<int> cardIds;
@@ -65,9 +72,8 @@ public class GameManager : MonoBehaviour
 
     private float CELL_DISTANCE = 3;            //マス同士の距離
     private float MOVE_SPEED = 20;              //マスを進むスピード
-    private float JUMP_HEIGHT = 2;              //プレイヤーのジャンプの高さ
     private float PLAYER_POSITION_Y = -1.4f;    //プレイヤーのデフォルトのY座標
-    private float BACKGROUND_WIDTH = 26.88f;    //背景のを横幅
+    private float BACKGROUND_WIDTH = 20.48f;    //背景のを横幅
 
     private int dice;
     private int diceCount;
@@ -84,6 +90,40 @@ public class GameManager : MonoBehaviour
         diceCount = stageData.SelectStage.diceCount;
         DiceCountSet();
         CellSet();
+        OnFadePanel(fadeColor, -1);
+    }
+
+    void Update()
+    {
+        if (isFadePanel)
+        {
+            fadePanelColor.a += changeAlphaValue * Time.deltaTime * fadeDirection;
+            fadePanel.color = fadePanelColor;
+            if (fadeDirection < 0 && fadePanelColor.a <= 0)
+            {
+                isFadePanel = false;
+                fadePanelColor.a = 0;
+                fadePanel.color = fadePanelColor;
+                fadePanel.raycastTarget = false;
+            }
+            else if (fadeDirection > 0 && fadePanelColor.a >= 1)
+            {
+                SceneManagerEx.LoadScene("BattleScene");
+            }
+        }
+    }
+
+    private void OnFadePanel(Color color, int direction)
+    {
+        fadePanelColor = color;
+        if (direction < 0)
+            fadePanelColor.a = 1f;
+        else if (direction > 0)
+            fadePanelColor.a = 0f;
+        fadePanel.color = fadePanelColor;
+        fadeDirection = direction;
+        fadePanel.raycastTarget = true;
+        isFadePanel = true;
     }
 
     private void CellSet()
@@ -222,20 +262,6 @@ public class GameManager : MonoBehaviour
         float moveDistance = 0;
         for (int i = 0; i < moveCell; i++)
         {
-            //animator.Play("jump");
-            //while (moveDistance < CELL_DISTANCE)
-            //{
-            //    pos.x -= MOVE_SPEED * Time.deltaTime;
-            //    moveDistance += MOVE_SPEED * Time.deltaTime;
-            //    cellParent.position = pos;
-
-            //    float t = moveDistance / CELL_DISTANCE;
-
-            //    Ppos.y = PLAYER_POSITION_Y + Mathf.Sin(t * Mathf.PI) * JUMP_HEIGHT;
-            //    player.position = Ppos;
-
-            //    yield return null;
-            //}
             while (moveDistance < CELL_DISTANCE)
             {
                 pos.x -= MOVE_SPEED * Time.deltaTime;
@@ -268,9 +294,8 @@ public class GameManager : MonoBehaviour
     private void CheckBackGround()
     {
         Transform lastBack = backGroundList[backGroundList.Count - 1];
-        float nextPosX = lastBack.position.x - CELL_DISTANCE;
 
-        if (nextPosX < 0)
+        if (lastBack.position.x < 0)
         {
             Transform firstBack = backGroundList[0];
             backGroundList.RemoveAt(0);
@@ -286,6 +311,6 @@ public class GameManager : MonoBehaviour
 
     public void GoBattle()
     {
-        SceneManager.LoadScene("BattleScene");
+        OnFadePanel(fadeColor, 1);
     }
 }
