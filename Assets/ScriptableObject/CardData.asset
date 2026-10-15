@@ -13,13 +13,158 @@ MonoBehaviour:
   m_Name: CardData
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   allCardList:
-  - name: CARD01
-    description: EnemyProtect-10
+  - name: "\u95D8\u6C17\u306E\u706F"
+    description: "\u81EA\u8EAB\u306E\u653B\u6483\u529B\u309240\u30A2\u30C3\u30D7"
+    durationTurns: 3
     ID: 1
+    effect: 0
+    effectValue: 40
+    command: SPARKLING
+    commandLimit: 4
+  - name: "\u95D8\u6C17\u306E\u708E"
+    description: "\u81EA\u8EAB\u306E\u653B\u6483\u529B\u309265\u30A2\u30C3\u30D7"
+    durationTurns: 4
+    ID: 2
+    effect: 0
+    effectValue: 65
+    command: INFERNO777
+    commandLimit: 4
+  - name: "\u95D8\u6C17\u306E\u7206\u708E"
+    description: "\u81EA\u8EAB\u306E\u653B\u6483\u529B\u3092105\u30A2\u30C3\u30D7"
+    durationTurns: 5
+    ID: 3
+    effect: 0
+    effectValue: 105
+    command: SUPERNOVA2026
+    commandLimit: 5
+  - name: "\u7834\u7532\u306E\u6954"
+    description: "\u6575\u306E\u9632\u5FA1\u529B\u309250\u30C0\u30A6\u30F3"
+    durationTurns: 3
+    ID: 4
     effect: 1
-    effectValue: -10
-    command: ProtectDown
-    commandLimit: 20
-  holdCardList: []
+    effectValue: -50
+    command: WEDGEIN
+    commandLimit: 4
+  - name: "\u7834\u7532\u306E\u69CC"
+    description: "\u6575\u306E\u9632\u5FA1\u529B\u309290\u30C0\u30A6\u30F3"
+    durationTurns: 4
+    ID: 5
+    effect: 1
+    effectValue: -90
+    command: SHATTER404
+    commandLimit: 4
+  - name: "\u7834\u7532\u306E\u5D29\u6483"
+    description: "\u6575\u306E\u9632\u5FA1\u529B\u3092140\u30C0\u30A6\u30F3"
+    durationTurns: 5
+    ID: 6
+    effect: 1
+    effectValue: -140
+    command: ARMORBREAK9000
+    commandLimit: 5
+  - name: "\u96F7\u5149\u306E\u91DD"
+    description: "\u6575\u306B70\u306E\u56FA\u5B9A\u30C0\u30E1\u30FC\u30B8"
+    durationTurns: 0
+    ID: 7
+    effect: 2
+    effectValue: -70
+    command: BOLTSTRIKE
+    commandLimit: 4
+  - name: "\u96F7\u5149\u306E\u69CD"
+    description: "\u6575\u306B150\u306E\u56FA\u5B9A\u30C0\u30E1\u30FC\u30B8"
+    durationTurns: 0
+    ID: 8
+    effect: 2
+    effectValue: -150
+    command: THUNDER808
+    commandLimit: 4
+  - name: "\u96F7\u5149\u306E\u88C1\u304D"
+    description: "\u6575\u306B300\u306E\u56FA\u5B9A\u30C0\u30E1\u30FC\u30B8"
+    durationTurns: 0
+    ID: 9
+    effect: 2
+    effectValue: -300
+    command: THUNDERGOD1999
+    commandLimit: 5
+  - name: "\u7652\u3057\u306E\u96EB"
+    description: "\u81EA\u8EAB\u306EHP\u3092100\u56DE\u5FA9"
+    durationTurns: 0
+    ID: 10
+    effect: 3
+    effectValue: 100
+    command: RAINDROP
+    commandLimit: 4
+  - name: "\u7652\u3057\u306E\u6CC9"
+    description: "\u81EA\u8EAB\u306EHP\u3092250\u56DE\u5FA9"
+    durationTurns: 0
+    ID: 11
+    effect: 3
+    effectValue: 250
+    command: SPRING505
+    commandLimit: 4
+  - name: "\u7652\u3057\u306E\u5927\u6CB3"
+    description: "\u81EA\u8EAB\u306EHP\u3092400\u56DE\u5FA9"
+    durationTurns: 0
+    ID: 12
+    effect: 3
+    effectValue: 400
+    command: LIFESTREAM3000
+    commandLimit: 5
+  - name: "\u546A\u7E1B\u306E\u7CF8"
+    description: "\u6575\u306E\u653B\u6483\u529B\u309230\u30C0\u30A6\u30F3"
+    durationTurns: 3
+    ID: 13
+    effect: 4
+    effectValue: -30
+    command: BINDING
+    commandLimit: 4
+  - name: "\u546A\u7E1B\u306E\u9396"
+    description: "\u6575\u306E\u653B\u6483\u529B\u309260\u30C0\u30A6\u30F3"
+    durationTurns: 4
+    ID: 14
+    effect: 4
+    effectValue: -60
+    command: SHACKLE606
+    commandLimit: 4
+  - name: "\u546A\u7E1B\u306E\u6ABB"
+    description: "\u6575\u306E\u653B\u6483\u529B\u309290\u30C0\u30A6\u30F3"
+    durationTurns: 5
+    ID: 15
+    effect: 4
+    effectValue: -90
+    command: IMPRISON1234
+    commandLimit: 5
+  - name: "\u5B88\u8B77\u306E\u6728\u76FE"
+    description: "\u81EA\u8EAB\u306E\u9632\u5FA1\u529B\u309280\u30A2\u30C3\u30D7"
+    durationTurns: 3
+    ID: 16
+    effect: 5
+    effectValue: 80
+    command: GUARDIAN
+    commandLimit: 4
+  - name: "\u5B88\u8B77\u306E\u9244\u76FE"
+    description: "\u81EA\u8EAB\u306E\u9632\u5FA1\u529B\u3092140\u30A2\u30C3\u30D7"
+    durationTurns: 4
+    ID: 17
+    effect: 5
+    effectValue: 140
+    command: BULWARK707
+    commandLimit: 4
+  - name: "\u5B88\u8B77\u306E\u8056\u76FE"
+    description: "\u81EA\u8EAB\u306E\u9632\u5FA1\u529B\u3092220\u30A2\u30C3\u30D7"
+    durationTurns: 5
+    ID: 18
+    effect: 5
+    effectValue: 220
+    command: HOLYSHIELD8888
+    commandLimit: 5
+  holdCardList:
+  - name: "\u546A\u7E1B\u306E\u7CF8"
+    description: "\u6575\u306E\u653B\u6483\u529B\u309230\u30C0\u30A6\u30F3"
+    durationTurns: 3
+    ID: 13
+    effect: 4
+    effectValue: -30
+    command: BINDING
+    commandLimit: 4
   editCardId: 0
   editCardValue: 1

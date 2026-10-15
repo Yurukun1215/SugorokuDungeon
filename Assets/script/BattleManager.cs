@@ -90,18 +90,20 @@ public class BattleManager : MonoBehaviour
 
     [Header("リザルトパネル")]
     [SerializeField] RectTransform result;
+    [SerializeField] TextMeshProUGUI resultText;
+    [SerializeField] TextMeshProUGUI recordText;
 
     [Header("スクリプト参照インスタンス")]
     [SerializeField] private CardData cardData;
     [SerializeField] private StageData stageData;
 
+    private bool auto;
 
+    //リザルト用変数
     private float masterTimer = 0;
-    private float clearTime = 0;
-
+    private int clearTime = 0;
     private int getSkillValue = 0;
-
-    private int bestDamage = 0;
+    private int maxDamage = 0;
 
     //カードを選択できる状態か
     private bool canSelectCard;
@@ -192,7 +194,8 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator PlayerTurn()
     {
-        yield return UseCardCoroutine();
+        if (!auto)
+            yield return UseCardCoroutine();
 
         //yield return PlayerAttackCoroutine();
         yield return AttackCoroutine(player, enemy, 1);
@@ -221,7 +224,7 @@ public class BattleManager : MonoBehaviour
         int damage = CalculateDamage(player, enemy);
         enemy.Damage(damage);
         enemy.animator.Play("Hurt");
-        StartCoroutine(DamageEffect(220, 0, 30, damage));
+        StartCoroutine(DamageEffect(220, 0, 30, damage, Color.red));
         yield return playerEndAttack;
         
         player.spriteRenderer.flipX = true;
@@ -254,7 +257,7 @@ public class BattleManager : MonoBehaviour
         int damage = CalculateDamage(enemy, player);
         player.Damage(damage);
         player.animator.Play("Hurt");
-        StartCoroutine(DamageEffect(-220, 0, 30, damage));
+        StartCoroutine(DamageEffect(-220, 0, 30, damage, Color.red));
         while (pos.x < start)
         {
             if (enemy.animator.GetCurrentAnimatorStateInfo(0).IsName("Attack"))
@@ -286,7 +289,7 @@ public class BattleManager : MonoBehaviour
         def.Damage(damage);
         def.animator.Play("Hurt");
         float effectPosX = def.parent.localPosition.x - (50 * direction);
-        StartCoroutine(DamageEffect(effectPosX, 0, 30, damage));
+        StartCoroutine(EffectAnim(enemy.spriteRenderer, Color.red, useCard.effectValue, effectPosX));
         //yield return atk.endAttack;
         yield return new WaitUntil(() => atk.animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"));
 
@@ -304,15 +307,16 @@ public class BattleManager : MonoBehaviour
 
         if (atk.name == player.name)
         {
-            if (damage > bestDamage)
-                bestDamage = damage;
+            if (damage > maxDamage)
+                maxDamage = damage;
         }
     }
 
-    private IEnumerator DamageEffect(float posX, float startY, float endY, int damage)
+    private IEnumerator DamageEffect(float posX, float startY, float endY, int damage, Color color)
     {
         TextMeshProUGUI text = damageEffect.GetComponent<TextMeshProUGUI>();
         text.text = damage.ToString();
+        text.color = color;
         RectTransform rect = damageEffect.GetComponent<RectTransform>();
         Vector3 pos = rect.anchoredPosition;
         pos.x = posX;
@@ -338,6 +342,9 @@ public class BattleManager : MonoBehaviour
         canSelectCard = true;
         while (useCard == null)
         {
+            if (auto)
+                yield break;
+
             yield return null;
         }
         logText.text = null;
@@ -383,8 +390,8 @@ public class BattleManager : MonoBehaviour
         }
         if (isSuccessCommand)
         {
-            ReflectEffect();
             commandLimitText.text = "Success";
+            yield return ReflectEffect();
         }
         else
         {
@@ -404,8 +411,26 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator EndBattle()
     {
-        clearTime = masterTimer;
-        yield return new WaitUntil(() => Mouse.current.rightButton.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame);
+        if (winner == player)
+        {
+            resultText.text = "勝利";
+            clearTime = (int)masterTimer;
+            recordText.text = $"・クリアタイム　{clearTime / 60} : {clearTime % 60}\r\n・最大ダメージ　{maxDamage}\r\n・獲得スキル数　{getSkillValue}";
+            stageData.KeepRecord(clearTime, maxDamage, getSkillValue);
+        }
+        else
+        {
+            resultText.text = "敗北";
+            recordText.text = "・クリアタイム　ーー\r\n・最大ダメージ　ーー\r\n・獲得スキル数　ーー";
+        }
+        float timer = 0;
+        while (true)
+        {
+            timer += Time.deltaTime;
+            if (timer >= 3f || Mouse.current.rightButton.wasPressedThisFrame || Mouse.current.leftButton.wasPressedThisFrame)
+                break;
+            yield return null;
+        }
         Vector3 pos = result.anchoredPosition;
         while (true) { 
             pos.y -= RESULT_OPEN_SPEED * Time.deltaTime;
@@ -419,6 +444,66 @@ public class BattleManager : MonoBehaviour
         }
     }
 
+    private IEnumerator ReflectEffect()
+    {
+        float effectPosX;
+        yield return new WaitForSeconds(0.5f);
+        switch (useCard.effect)
+        {
+            case Effect.PlayerAttack:
+                player.attack += useCard.effectValue;
+                effectPosX = player.parent.localPosition.x + 50;
+                yield return EffectAnim(player.spriteRenderer, Color.orange, useCard.effectValue, effectPosX);
+                break;
+            case Effect.EnemyDefense:
+                enemy.defence += useCard.effectValue;
+                effectPosX = enemy.parent.localPosition.x - 50;
+                yield return EffectAnim(enemy.spriteRenderer, Color.blue, useCard.effectValue, effectPosX);
+                break;
+            case Effect.Damage:
+                enemy.hp += useCard.effectValue;
+                effectPosX = enemy.parent.localPosition.x - 50;
+                yield return EffectAnim(enemy.spriteRenderer, Color.red, useCard.effectValue, effectPosX);
+                break;
+            case Effect.Heal:
+                player.hp += useCard.effectValue;
+                effectPosX = player.parent.localPosition.x + 50;
+                yield return EffectAnim(player.spriteRenderer, Color.green, useCard.effectValue, effectPosX);
+                break;
+        }
+    }
+    
+    private IEnumerator EffectAnim(SpriteRenderer targetRenderer, Color endColor, int value, float effectPosX, float duration = 0.75f)
+    {
+        StartCoroutine(DamageEffect(effectPosX, 0, 30, value, endColor));
+        bool effected = false;
+        float timer = 0;
+        Color startColor = Color.white;
+        float t = 0;
+        while (true) 
+        {
+            timer += Time.deltaTime;
+
+            t = Mathf.Clamp01(timer / duration);
+
+            Color lerpedColor = Color.Lerp(startColor, endColor, t);
+            targetRenderer.color = lerpedColor;
+
+            if (lerpedColor == endColor)
+            {
+                effected = true;
+                timer = 0;
+                startColor = endColor;
+                endColor = Color.white;
+            }
+
+            if (effected && lerpedColor == endColor)
+            {
+                break;
+            }
+            yield return null;
+        }
+    }
 
     //以下関数
 
@@ -446,18 +531,6 @@ public class BattleManager : MonoBehaviour
         return (int)damage;
     }
 
-    private void ReflectEffect()
-    {
-        switch (useCard.effect)
-        {
-            case Effect.Attack:
-                player.attack += useCard.effectValue;
-                break;
-            case Effect.Defense:
-                enemy.defence += useCard.effectValue;
-                break;
-        }
-    }
 
     private void TextPartMarkup(TextMeshProUGUI tmp, string text, int index, Color color)
     {
@@ -526,5 +599,19 @@ public class BattleManager : MonoBehaviour
     public void ReturnGuild()
     {
         OnFadePanel(fadeColor, 1);
+    }
+
+    public void AutoPlay(Image image)
+    {
+        if (auto)
+        {
+            auto = false;
+            image.color = Color.white;
+        }
+        else 
+        {
+            auto = true;
+            image.color = Color.yellow;
+        }
     }
 }
